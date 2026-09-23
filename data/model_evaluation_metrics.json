@@ -1,0 +1,130 @@
+{
+  "dataset": {
+    "source": "SYNTHETIC_TRANSFORMER_TELEMETRY (IEEE C57 domain specifications)",
+    "total_samples": 6000,
+    "validation_samples": 1200,
+    "features_count": 15
+  },
+  "random_forest_failure_predictor": {
+    "model_type": "RandomForestClassifier",
+    "accuracy": 1.0,
+    "weighted_precision": 1.0,
+    "weighted_recall": 1.0,
+    "weighted_f1_score": 1.0,
+    "roc_auc_ovr": 1.0,
+    "confusion_matrix": [
+      [
+        780,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        144,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        120,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        96,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        60
+      ]
+    ],
+    "classes": [
+      "NORMAL",
+      "THERMAL_OVERLOAD",
+      "MECHANICAL_FAULT",
+      "DIELECTRIC_FAULT",
+      "CRITICAL_FAILURE"
+    ],
+    "per_class_metrics": {
+      "NORMAL": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 780.0
+      },
+      "THERMAL_OVERLOAD": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 144.0
+      },
+      "MECHANICAL_FAULT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 120.0
+      },
+      "DIELECTRIC_FAULT": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 96.0
+      },
+      "CRITICAL_FAILURE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 60.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1200.0
+      }
+    },
+    "top_features": {
+      "vibration": 0.15467086751279038,
+      "power_factor": 0.10074428298010664,
+      "vib_rate_of_change": 0.09768932123395183,
+      "oil_temperature": 0.09172078801551634,
+      "current": 0.08135398097784918
+    }
+  },
+  "isolation_forest_anomaly_detector": {
+    "model_type": "IsolationForest",
+    "accuracy": 0.7,
+    "precision": 1.0,
+    "recall": 0.14285714285714285,
+    "f1_score": 0.25,
+    "roc_auc": 0.9992918192918193,
+    "confusion_matrix": [
+      [
+        780,
+        0
+      ],
+      [
+        360,
+        60
+      ]
+    ]
+  }
+}

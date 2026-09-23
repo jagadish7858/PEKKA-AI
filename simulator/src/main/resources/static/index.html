@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Critical Infrastructure Sensor Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Navigation / Header -->
+        <header class="top-nav">
+            <div class="brand">
+                <div class="pulse-indicator" id="pulseIndicator"></div>
+                <div class="brand-text">
+                    <span class="sub-title">AUTONOMOUS AI CRITICAL INFRASTRUCTURE</span>
+                    <h1>SENSOR SIMULATOR</h1>
+                </div>
+            </div>
+
+            <div class="simulation-controls">
+                <div class="control-group">
+                    <span class="control-label">SIMULATION MODE</span>
+                    <div class="mode-btn-group">
+                        <button class="mode-btn active" id="btnModeNormal" onclick="setMode('NORMAL')">NORMAL</button>
+                        <button class="mode-btn" id="btnModeWarning" onclick="setMode('WARNING')">WARNING</button>
+                        <button class="mode-btn" id="btnModeCritical" onclick="setMode('CRITICAL')">CRITICAL</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <span class="control-label">INTERVAL</span>
+                    <div class="interval-controls">
+                        <select id="intervalSelect" onchange="changeInterval(this.value)">
+                            <option value="500">500 ms (Fast)</option>
+                            <option value="1000" selected>1000 ms (1s)</option>
+                            <option value="2000">2000 ms (2s)</option>
+                            <option value="5000">5000 ms (5s)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn" id="btnTogglePlay" onclick="togglePlay()">
+                        <span id="playIcon">⏸</span> <span id="playText">Pause</span>
+                    </button>
+                    <button class="action-btn secondary" onclick="resetBaseline()">
+                        <span>↺</span> Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="system-stats">
+                <div class="stat-pill">
+                    <span class="stat-label">TICKS</span>
+                    <span class="stat-value" id="statTicks">0</span>
+                </div>
+                <div class="stat-pill">
+                    <span class="stat-label">STREAM</span>
+                    <span class="stat-status live" id="wsStatus">CONNECTING</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Equipment Tabs -->
+            <div class="equipment-tabs-bar">
+                <div class="equipment-tabs" id="equipmentTabs">
+                    <!-- Dynamic tabs populated by JS -->
+                </div>
+                <div class="equipment-meta" id="equipmentMeta">
+                    <span class="meta-item"><strong id="eqMetaName">Transformer 01</strong></span>
+                    <span class="meta-item" id="eqMetaLocation">Sector 4 Substation</span>
+                    <span class="status-badge normal" id="eqOverallStatus">NORMAL</span>
+                </div>
+            </div>
+
+            <!-- Sensors Grid: 9 Virtual Sensors -->
+            <div class="sensors-grid" id="sensorsGrid">
+                <!-- Dynamically rendered 9 sensor cards -->
+            </div>
+
+            <!-- Bottom Multi-panel: Raw JSON Stream Inspector & REST API Reference -->
+            <section class="bottom-panels">
+                <!-- Raw Stream Inspector -->
+                <div class="panel-box json-stream-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="panel-icon">⚡</span>
+                            <h3>LIVE WEBSOCKET TELEMETRY FEED</h3>
+                        </div>
+                        <span class="topic-tag">/topic/readings</span>
+                    </div>
+                    <div class="panel-body">
+                        <pre class="json-display" id="rawJsonFeed">Waiting for telemetry stream...</pre>
+                    </div>
+                </div>
+
+                <!-- Fast API & AI Integration Guide -->
+                <div class="panel-box api-guide-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <span class="panel-icon">🔗</span>
+                            <h3>AI BACKEND INTEGRATION ENDPOINTS</h3>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="api-endpoints-list">
+                            <div class="endpoint-row">
+                                <span class="badge get">GET</span>
+                                <code>/api/v1/readings</code>
+                                <span class="endpoint-desc">All latest sensor telemetry</span>
+                                <button class="test-btn" onclick="testEndpoint('/api/v1/readings')">Run</button>
+                            </div>
+                            <div class="endpoint-row">
+                                <span class="badge get">GET</span>
+                                <code>/api/v1/readings/TRANSFORMER-01</code>
+                                <span class="endpoint-desc">All 9 transformer sensors</span>
+                                <button class="test-btn" onclick="testEndpoint('/api/v1/readings/TRANSFORMER-01')">Run</button>
+                            </div>
+                            <div class="endpoint-row">
+                                <span class="badge get">GET</span>
+                                <code>/api/v1/readings/TRANSFORMER-01/history</code>
+                                <span class="endpoint-desc">Time-series history buffer</span>
+                                <button class="test-btn" onclick="testEndpoint('/api/v1/readings/TRANSFORMER-01/history')">Run</button>
+                            </div>
+                            <div class="endpoint-row">
+                                <span class="badge get">GET</span>
+                                <code>/api/v1/sensors</code>
+                                <span class="endpoint-desc">Sensor metadata & thresholds</span>
+                                <button class="test-btn" onclick="testEndpoint('/api/v1/sensors')">Run</button>
+                            </div>
+                            <div class="endpoint-row">
+                                <span class="badge post">POST</span>
+                                <code>/api/v1/simulation/mode</code>
+                                <span class="endpoint-desc">Switch NORMAL / WARNING / CRITICAL</span>
+                                <button class="test-btn" onclick="injectFaultModal()">Fault Injection</button>
+                            </div>
+                            <div class="endpoint-row">
+                                <span class="badge ws">WS</span>
+                                <code>/ws &rarr; /topic/readings</code>
+                                <span class="endpoint-desc">Real-time STOMP telemetry broadcast</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Anomaly Injection Modal -->
+        <div class="modal-backdrop" id="anomalyModal" style="display: none;">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>Inject Transient Anomaly</h3>
+                    <button class="close-btn" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-help">Simulate sudden electrical or thermal disturbances to evaluate AI anomaly detection response.</p>
+                    <div class="form-row">
+                        <label>Equipment</label>
+                        <select id="modalEquipment">
+                            <option value="TRANSFORMER-01">TRANSFORMER-01 (Substation Alpha)</option>
+                            <option value="TRANSFORMER-02">TRANSFORMER-02 (Distribution Beta)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Sensor Type</label>
+                        <select id="modalSensorType">
+                            <option value="TEMPERATURE">TEMPERATURE (+°C)</option>
+                            <option value="VOLTAGE">VOLTAGE (V Sag / Spike)</option>
+                            <option value="CURRENT">CURRENT (+A Surge)</option>
+                            <option value="VIBRATION">VIBRATION (+mm/s)</option>
+                            <option value="OIL_TEMPERATURE">OIL TEMPERATURE (+°C)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>Delta Magnitude (+/-)</label>
+                        <input type="number" id="modalDelta" value="30.0" step="1.0">
+                    </div>
+                    <div class="form-row">
+                        <label>Duration (Ticks)</label>
+                        <input type="number" id="modalTicks" value="10" min="1" max="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="action-btn secondary" onclick="closeModal()">Cancel</button>
+                    <button class="action-btn" onclick="submitAnomaly()">Inject Anomaly</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

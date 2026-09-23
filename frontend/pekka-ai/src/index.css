@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply bg-ops-bg text-ops-textDim font-sans antialiased overflow-x-hidden selection:bg-gold-dim selection:text-white;
+    background-color: #0B1310;
+  }
+}
+
+/* Subtle Marbled / Veined Texture for Panels */
+.marble-texture {
+  background-color: #10201A;
+  background-image: 
+    radial-gradient(ellipse at top left, rgba(201, 162, 39, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(143, 191, 163, 0.03) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cpath d='M0 40 Q 90 80, 160 50 T 320 120 T 400 90 M 80 200 Q 180 150, 240 230 T 400 280 M 30 380 Q 140 310, 260 360 T 380 340 M 180 0 Q 210 110, 290 160' fill='none' stroke='%23C9A227' stroke-width='0.75' stroke-opacity='0.05' stroke-dasharray='120 4' /%3E%3Cpath d='M-20 120 Q 70 220, 190 180 T 380 210 M 210 260 Q 270 330, 390 310' fill='none' stroke='%23C9A227' stroke-width='0.5' stroke-opacity='0.03' /%3E%3C/svg%3E");
+}
+
+.card-luxury {
+  background-color: #10201A;
+  border: 1px solid rgba(201, 162, 39, 0.24);
+  border-radius: 9px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 0 16px rgba(201, 162, 39, 0.02);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-luxury:hover {
+  border-color: rgba(201, 162, 39, 0.45);
+  box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.65), inset 0 0 20px rgba(201, 162, 39, 0.05);
+}
+
+/* Custom Tactical Grid Background */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(42, 59, 50, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 59, 50, 0.4) 1px, transparent 1px);
+}
+
+.bg-dot-pattern {
+  background-size: 20px 20px;
+  background-image: radial-gradient(rgba(201, 162, 39, 0.15) 1px, transparent 1px);
+}
+
+/* Gold, Sage, and Alert Glow Utilities */
+.glow-cyan,
+.glow-gold {
+  box-shadow: 0 0 16px rgba(201, 162, 39, 0.25), inset 0 0 10px rgba(201, 162, 39, 0.05);
+}
+
+.glow-sage {
+  box-shadow: 0 0 14px rgba(143, 191, 163, 0.25), inset 0 0 8px rgba(143, 191, 163, 0.05);
+}
+
+.glow-amber {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.25), inset 0 0 10px rgba(245, 158, 11, 0.05);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.35), inset 0 0 10px rgba(239, 68, 68, 0.08);
+}
+
+.text-glow-cyan,
+.text-glow-gold {
+  text-shadow: 0 0 8px rgba(201, 162, 39, 0.6);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+}
+
+.text-glow-amber {
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+/* Tactical Moss-Gray and Gold Hairline Borders */
+.border-tactical {
+  border: 1px solid #2A3B32;
+}
+
+.border-tactical-cyan,
+.border-gold-hairline {
+  border: 1px solid rgba(201, 162, 39, 0.32);
+}
+
+.border-tactical-red {
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.border-tactical-amber {
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Luxury Nav Pill Active State */
+.nav-pill-active {
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.14) 0%, rgba(16, 32, 26, 0.85) 100%);
+  color: #F2EDE0;
+  border-left: 2.5px solid #C9A227;
+  box-shadow: inset 0 0 14px rgba(201, 162, 39, 0.06);
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1310;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A3B32;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3E7A4F;
+}
+
+/* Tabular figures for telemetry numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

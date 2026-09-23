@@ -1,0 +1,2 @@
+# Directory reserved for Phase 2 trained scikit-learn / joblib models
+# e.g., isolation_forest_transformer.joblib, failure_risk_classifier.joblib
